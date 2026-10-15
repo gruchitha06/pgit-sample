@@ -33,3 +33,24 @@ def signup(activity_name: str, email: str):
     return {
         "message": f"Successfully registered {email} for {activity_name}"
     }
+
+@app.post("/activities/{activity_name}/unregister")
+def unregister(activity_name: str, email: str):
+    """Unregister an email from an activity."""
+    if activity_name not in activities:
+        raise HTTPException(
+            status_code=404,
+            detail="Activity not found",
+        )
+
+    if email not in activities[activity_name]:
+        raise HTTPException(
+            status_code=400,
+            detail="Not registered for this activity",
+        )
+
+    activities[activity_name].remove(email)
+
+    return {
+        "message": f"Successfully unregistered {email} from {activity_name}"
+    }
